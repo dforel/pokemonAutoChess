@@ -42,7 +42,7 @@ import {
 import { values } from "../utils/schemas"
 import Player from "./colyseus-models/player"
 import { PokemonClasses } from "./colyseus-models/pokemon"
-import PokemonFactory, { PkmColorVariantsByPkm } from "./pokemon-factory"
+import { getPokemonBaseline, PkmColorVariantsByPkm } from "./pokemon-factory"
 import { getPokemonData } from "./precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "./precomputed/precomputed-rarity"
 import { PVEStages } from "./pve-stages"
@@ -127,7 +127,7 @@ export function getSellPrice(
     price = duo ? 6 : 10
   } else if (pokemon.rarity === Rarity.LEGENDARY) {
     price = duo ? 10 : 20
-  } else if (PokemonFactory.getPokemonBaseEvolution(name) === Pkm.EEVEE) {
+  } else if (getPokemonBaseline(name) === Pkm.EEVEE) {
     price = RarityCost[pokemon.rarity]
   } else if (duo) {
     price = Math.ceil((RarityCost[pokemon.rarity] * stars) / 2)
@@ -266,7 +266,7 @@ export default class Shop {
 
   releasePokemon(pkm: Pkm, player: Player, state: GameState) {
     const { stars, rarity, regional } = getPokemonData(pkm)
-    const baseEvolution = PokemonFactory.getPokemonBaseEvolution(pkm)
+    const baseline = getPokemonBaseline(pkm)
     let entityNumber = stars >= 3 ? 9 : stars === 2 ? 3 : 1
     const duo = Object.entries(PkmDuos).find(([_key, duo]) => duo.includes(pkm))
     if (duo) {
@@ -288,7 +288,7 @@ export default class Shop {
 
     if (pool) {
       for (let n = 0; n < entityNumber; n++) {
-        pool.push(baseEvolution)
+        pool.push(baseline)
       }
     }
   }
@@ -478,12 +478,7 @@ export default class Shop {
     const wildChance =
       player.wildChance + (isPVE || state.stageLevel === 0 ? 0.05 : 0)
 
-    const finals = new Set(
-      values(player.board)
-        .filter((pokemon) => pokemon.final)
-        .map((pokemon) => PkmFamily[pokemon.name])
-    )
-
+    const finals = player.getFinalizedLines()
     let specificTypesWanted: Synergy[] | undefined = undefined
 
     const attractors = values(player.board).filter(
@@ -592,11 +587,7 @@ export default class Shop {
     const rarityProbability = FishRarityProbability[rod]
     const rarity_seed = Math.random()
     let threshold = 0
-    const finals = new Set(
-      values(player.board)
-        .filter((pokemon) => pokemon.final)
-        .map((pokemon) => PkmFamily[pokemon.name])
-    )
+    const finals = player.getFinalizedLines()
 
     let rarity = Rarity.SPECIAL
     for (const r in rarityProbability) {
@@ -630,11 +621,7 @@ export default class Shop {
     }
     const rarity_seed = Math.random() * (1 + meltan.ap / 200) * (1 + meltan.luck / 100)
     let threshold = 0
-    const finals = new Set(
-      values(player.board)
-        .filter((pokemon) => pokemon.final)
-        .map((pokemon) => PkmFamily[pokemon.name])
-    )
+    const finals = player.getFinalizedLines()
 
     let rarity = Rarity.SPECIAL
     for (const r in rarityProbability) {

@@ -1730,7 +1730,7 @@
 		"ROLLOUT": "Augmente la DEF du lanceur de [2,5,10,SP] et inflige des SPECIAL à hauteur de 2 fois sa DEF.",
 		"ICE_BALL": "Augmente la SPE_DEF du lanceur de 10 puis inflige des SPECIAL à hauteur de [10,20,30,SP] + [50,100,150,SP]% de la SPE_DEF du lanceur.",
 		"THRASH": "Augmente l'ATK de [100,SP]% et rend le lanceur CONFUSION pendant 3 secondes.",
-		"SOLAR_BEAM": "Inflige [25,50,100,SP] SPECIAL en ligne droite derrière la cible et BURN pendant 3 secondes. Si le lanceur est sous le spot lumineux et si le temps est SUN, les dégâts sont doublés et 40 PP sont restaurés au lanceur.",
+		"SOLAR_BEAM": "Inflige [25,50,100,SP] SPECIAL en ligne droite derrière la cible et BURN pendant 3 secondes. Si le lanceur est sous le spot lumineux et si le temps est SUN, les dégâts sont doublés et 20 PP sont restaurés au lanceur.",
 		"MAGMA_STORM": "La cible est piégée dans un maelström de feu qui inflige [80,SP] SPECIAL avant de se propager vers une cible adjacente.",
 		"DIRE_CLAW": "Inflige [15,30,60,SP] SPECIAL à la cible, ainsi qu'une condition de statut aléatoire parmi POISON, SLEEP et PARALYSIS pendant 3 secondes.",
 		"SLASHING_CLAW": "Inflige [15,30,60,SP] et WOUND pendant 5 secondes à la cible. Si elle subit déjà WOUND, inflige 30 % de bonus SPECIAL.",
@@ -2174,8 +2174,8 @@
 		"CORKSCREW_CRASH": "Inflige 100 % de l'ATK comme TRUE",
 		"MAX_MELTDOWN": "Inflige 120 % de l'ATK comme TRUE",
 		"TILLER": "Gagne de +1 à +5 DEF et SPE_DEF et +3 ATK à profondeur max",
-		"DIGGER": "Gagne de +2 à +4 DEF et SPE_DEF et +5 ATK à profondeur max",
-		"DRILLER": "Gagne de +3 à +6 DEF et SPE_DEF et +8 ATK à profondeur max",
+		"DIGGER": "Gagne de +2 à +10 DEF et SPE_DEF et +5 ATK à profondeur max",
+		"DRILLER": "Gagne de +3 à +15 DEF et SPE_DEF et +8 ATK à profondeur max",
 		"DEEP_MINER": "Gagne +1 DEF et SPE_DEF pour chaque trou totalement creusé sur votre terrain et +12 ATK lorsque tout le plateau est entièrement creusé",
 		"POISONOUS": "[30,LK]% de chance d'infliger POISONNED",
 		"VENOMOUS": "[60,LK]% de chance d'infliger POISONNED. Cumuls max de POISONNED +1",
@@ -3921,7 +3921,6 @@
 		"BEAST_BALL": "Ultra Ball"
 	},
 	"room_is_private": "Ce salon est privé. Saisissez le mot de passe",
-	"wrong_password": "Mot de passe incorrect !",
 	"game_full": "Ce groupe est complet",
 	"game_already_started": "La partie a déjà commencé",
 	"min_rank_not_reached": "Votre rang n'est pas assez élevé pour jouer ce match classé",
@@ -4035,7 +4034,7 @@
 		"ROOM_EMPTY": "Ce salon a été supprimé faute de manque de joueurs",
 		"ROOM_DELETED": "Ce salon a été supprimé",
 		"GAME_ALREADY_STARTED": "Cette partie a déjà commencé",
-		"INVALID_PASSWORD": "Mauvais mot de passe",
+		"INVALID_PASSWORD": "Mot de passe incorrect !",
 		"UNKNOWN_ERROR": "Une erreur inconnue est survenue: {{error}}"
 	},
 	"connection_status": {

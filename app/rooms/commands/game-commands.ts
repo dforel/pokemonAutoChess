@@ -22,7 +22,7 @@ import Player from "../../models/colyseus-models/player"
 import { Pokemon, PokemonClasses } from "../../models/colyseus-models/pokemon"
 import { IDetailledPokemon } from "../../models/mongo-models/bot-v2"
 import UserMetadata from "../../models/mongo-models/user-metadata"
-import PokemonFactory from "../../models/pokemon-factory"
+import PokemonFactory, { getPokemonBaseline, PkmColorVariantsByPkm } from "../../models/pokemon-factory"
 import { PVEStages } from "../../models/pve-stages"
 import { getBuyPrice, getSellPrice } from "../../models/shop"
 import {
@@ -58,17 +58,14 @@ import {
 } from "../../types/enum/Game"
 import {
   ArtificialItems,
-  Berries,
   ConsumableItems,
   CraftableItems,
   Dishes,
-  FishingRods,
   Item,
   ItemComponents,
   ItemRecipe,
   Mulches,
   ShinyItems,
-  Sweets,
   SynergyGems,
   SynergyGivenByGem,
   SynergyGivenByItem,
@@ -99,7 +96,6 @@ import {
   isOnBench,
   isPositionEmpty
 } from "../../utils/board"
-import { distanceC } from "../../utils/distance"
 import { repeat } from "../../utils/function"
 import { logger } from "../../utils/logger"
 import { max } from "../../utils/number"
@@ -107,6 +103,7 @@ import { chance, pickNRandomIn, pickRandomIn } from "../../utils/random"
 import { resetArraySchema, values } from "../../utils/schemas"
 import { getWeather } from "../../utils/weather"
 import GameRoom from "../game-room"
+import { getFlowerPotsUnlocked } from "../../core/flower-pots"
 
 export class OnBuyPokemonCommand extends Command<
   GameRoom,
@@ -304,8 +301,12 @@ export class OnDragDropPokemonCommand extends Command<
           const pokemonToClone = player.getPokemonAt(x, y)
           if (pokemonToClone && pokemonToClone.canBeCloned) {
             dittoReplaced = true
+            let pkm = getPokemonBaseline(pokemonToClone.name)
+            if (pkm in PkmColorVariantsByPkm) {
+              pkm = PkmColorVariantsByPkm[pkm]!(player)
+            }
             const replaceDitto = PokemonFactory.createPokemonFromName(
-              PokemonFactory.getPokemonBaseEvolution(pokemonToClone.name),
+              pkm,
               player
             )
             pokemon.items.forEach((item) => {
@@ -589,6 +590,12 @@ export class OnDragDropItemCommand extends Command<
 
     let pokemon: Pokemon | undefined
     if (zone === "flower-pot-zone") {
+      const nbPots = getFlowerPotsUnlocked(player).length
+      if (index >= nbPots) {
+        // has not unlocked that flower pot yet
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
       pokemon = player.flowerPots[index]
       if (!pokemon || Mulches.includes(item) === false) {
         client.send(Transfer.DRAG_DROP_CANCEL, message)
