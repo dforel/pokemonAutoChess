@@ -1025,7 +1025,7 @@ export class Garchomp extends Pokemon {
   def = 12
   speDef = 12
   maxPP = 100
-  range = 2
+  range = 1
   skill = Ability.DRAGON_BREATH
 }
 
@@ -1864,15 +1864,17 @@ const conversionEffect = ({
 
   // when converting to bug, get a clone
   if (synergyCopied === Synergy.BUG) {
-    const bug = PokemonFactory.createPokemonFromName(
-      entity.name,
-      player as Player
-    )
-    const coord = simulation.getClosestAvailablePlaceOnBoardToPokemonEntity(
+    const coord = simulation.getClosestFreeCellToPokemonEntity(
       entity,
       player.team
     )
-    simulation.addPokemon(bug, coord.x, coord.y, player.team, true)
+    if (coord) {
+      const bug = PokemonFactory.createPokemonFromName(
+        entity.name,
+        player as Player
+      )
+      simulation.addPokemon(bug, coord.x, coord.y, player.team, true)
+    }
   }
 
   // when converting to dragon, no double synergy but gains the AP/AS/SHIELD based on opponent team
@@ -2752,7 +2754,7 @@ export class Rhyhorn extends Pokemon {
   speed = 38
   def = 12
   speDef = 4
-  maxPP = 100
+  maxPP = 120
   range = 1
   skill = Ability.HORN_DRILL
 }
@@ -2771,7 +2773,7 @@ export class Rhydon extends Pokemon {
   speed = 38
   def = 20
   speDef = 6
-  maxPP = 100
+  maxPP = 120
   range = 1
   skill = Ability.HORN_DRILL
 }
@@ -2789,7 +2791,7 @@ export class Rhyperior extends Pokemon {
   speed = 38
   def = 30
   speDef = 8
-  maxPP = 100
+  maxPP = 120
   range = 1
   skill = Ability.HORN_DRILL
 }
@@ -6416,6 +6418,22 @@ export class Manaphy extends Pokemon {
   range = 3
   skill = Ability.HEART_SWAP
   passive = Passive.MANAPHY
+  afterSimulationStart({ entity, simulation, player }) {
+    if (entity.items.has(Item.AQUA_EGG)) {
+      entity.items.delete(Item.AQUA_EGG)
+      const coord = simulation.getClosestFreeCellToPokemonEntity(entity, entity.team)
+      if (coord) {
+        const phione = PokemonFactory.createPokemonFromName(Pkm.PHIONE, player)
+        simulation.addPokemon(
+          phione,
+          coord.x,
+          coord.y,
+          entity.team,
+          true
+        )
+      }
+    }
+  }
 }
 
 export class Rotom extends Pokemon {
